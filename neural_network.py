@@ -105,8 +105,23 @@ def test_predictions(index, W1, b1, W2, b2):
     plt.imshow(current_image, interpolation='nearest')
     plt.show()
 
+def display_predictions(W1, b1, W2, b2, X, Y, num_samples=10):
+    indices = np.random.choice(X.shape[1], num_samples, replace=False)
+    predictions = make_predictions(X, W1, b1, W2, b2)
+    
+    plt.figure(figsize=(10, 2))
+    for i, idx in enumerate(indices):
+        plt.subplot(1, num_samples, i + 1)
+        img = X[:, idx].reshape((28, 28)) * 255
+        plt.imshow(img, cmap="gray")
+        plt.axis('off')
+        plt.title(f"Pred: {predictions[idx]}\nTrue: {Y[idx]}")
+        print(indices, predictions)
+    plt.show() 
+
 W1, b1, W2, b2 = gradient_descent(X_train, Y_train, alpha=0.1, iterations=500)
 
 dev_predictions = make_predictions(X_dev, W1, b1, W2, b2)
 dev_accuracy = get_accuracy(dev_predictions, Y_dev)
+display_predictions(W1, b1, W2, b2, X_dev, Y_dev, num_samples=10)
 print("Dev Set Accuracy:", dev_accuracy)
